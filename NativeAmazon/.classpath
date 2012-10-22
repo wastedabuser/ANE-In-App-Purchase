@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="lib" path="/Applications/Adobe Flash Builder 4.6/sdks/AIR3SDK/lib/android/FlashRuntimeExtensions.jar"/>
+	<classpathentry kind="lib" path="libs/in-app-purchasing-1.0.3.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/Users/arno/Desktop/Apps-SDK/In-App-Purchasing/documentation/API-Reference/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin/classes"/>
+</classpath>

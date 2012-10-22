@@ -31,7 +31,7 @@
 		<mkdir dir="${build}/Default"/>
 		<mkdir dir="${build}/iOS"/>
 	</target>	
-
+	
 	<target name="iOSClean" depends="init">
 		<exec executable="xcodebuild" dir="NativeIOS" 
 			failonerror="true">
@@ -71,8 +71,7 @@
 		<copy file="temp/library.swf" todir="${build}/Default"/>
 		<copy file="temp/library.swf" todir="${build}/iOS"/>
 		<delete dir="temp"/>
-	</target>	
-
+	</target>
 
 	<target name="compile" depends="unzipSwf">
 		<java jar="${adt.jar}" fork="true" failonerror="true">
@@ -106,6 +105,101 @@
 			<arg value="library.swf"/>
 		</java>
 	</target>
+	
+	<!-- Amazon Build -->
+	<target name="cleanAmazon">
+		<delete dir="${buildAmazon}"/>
+	</target>
+	<target name="initAmazon" depends="cleanAmazon">
+		<mkdir dir="${buildAmazon}"/>
+		<mkdir dir="${buildAmazon}/Amazon"/>
+		<mkdir dir="${buildAmazon}/iOS"/>
+	</target>	
+	
+	<target name="iOSCleanAmazon" depends="initAmazon">
+		<exec executable="xcodebuild" dir="NativeIOS" 
+			failonerror="true">
+		        
+			<arg line="-project ${iosProjectName.xcodeproj}"/>
+			<arg line="-alltargets clean" />
+		            
+		</exec>
+	</target>	
 
+	<target name="iOSCompileAmazon" depends="iOSCleanAmazon">
+		<exec executable="xcodebuild" dir="NativeIOS" 
+			failonerror="true"> 
+			<arg line="-project ${iosProjectName.xcodeproj}"/>
+			<arg line="-sdk iphoneos4.3"/>
+			<arg line="-alltargets" />
+			<arg line="-configuration Release" />
+		            
+		</exec>
+		
+	</target>
+
+	<target name="iOSCopyAmazon" depends="iOSCompileAmazon">
+		<copy file="${lib.a}" todir="${buildAmazon}/iOS"/>
+	</target>
+	
+	<target name="regroupJarAmazon" depends="iOSCopyAmazon">
+	    <mkdir dir="${buildAmazon}/temp/zip"/>
+	    <unzip src="NativeAmazon/libs/in-app-purchasing-1.0.3.jar" dest="${buildAmazon}/temp/zip"/>
+	    <unzip src="${libAmazon.jar}" dest="${buildAmazon}/temp/zip" />
+	    <copydir src="${buildAmazon}/temp/zip/com" dest="${buildAmazon}/temp/classes/com"/>
+
+	    <mkdir dir="${buildAmazon}/temp/amazon"/>
+	    <jar basedir="${buildAmazon}/temp/classes" destfile="repacked${libAmazon.jar}"/>
+	    <delete dir="${buildAmazon}/temp"/>
+	</target>
+
+
+	<target name="AmazonCopy" depends="regroupJarAmazon">
+		<copy file="repacked${libAmazon.jar}" todir="${buildAmazon}/Amazon"/>
+	</target>
+	
+	
+	
+	<target name="unzipSwfAmazon" depends="AmazonCopy">
+	    <mkdir dir="temp"/>
+		<unzip src="${lib.swc}" dest="temp"/>
+		<copy file="temp/library.swf" todir="${buildAmazon}/Amazon"/>
+		<copy file="temp/library.swf" todir="${buildAmazon}/Default"/>
+		<copy file="temp/library.swf" todir="${buildAmazon}/iOS"/>
+		<delete dir="temp"/>
+	</target>
+	
+	<target name="compileAmazon" depends="unzipSwfAmazon">
+		<java jar="${adt.jar}" fork="true" failonerror="true">
+			<arg value="-package"/>
+			<arg value="-target"/>
+			<arg value="ane"/>
+			<arg value="${buildAmazon}/${aneName.ane}"/>
+			<arg value="${extension.xml}"/>
+			
+			<arg value="-swc"/>
+			<arg value="${lib.swc}"/>
+			
+			<arg value="-platform"/>
+			<arg value="iPhone-ARM"/>
+			<arg value="-platformoptions"/>
+			<arg value="${iOSPlatformOptions}"/>
+			<arg value="-C"/>
+			<arg value="${buildAmazon}/iOS"/>
+			<arg value="."/>
+			
+			<arg value="-platform"/> 
+			<arg value="Android-ARM"/>
+			<arg value="-C"/>
+			<arg value="${buildAmazon}/Amazon"/>
+			<arg value="."/>
+			
+			<arg value="-platform"/>
+			<arg value="default"/>
+			<arg value="-C"/>
+			<arg value="${buildAmazon}/Default"/>
+			<arg value="library.swf"/>
+		</java>
+	</target>
 </project>
         

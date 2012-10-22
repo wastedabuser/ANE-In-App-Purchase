@@ -510,7 +510,7 @@ public class BillingService extends Service implements ServiceConnection {
      */
     private void purchaseStateChanged(int startId, String signedData, String signature) {
         
-    	Log.e("BillingService", "purchaseStateChanged "+signedData+" . "+signature);
+    	Log.i("BillingService", "purchaseStateChanged "+signedData+" . "+signature);
     	
         JSONObject jsonObject = new JSONObject();
         try {
@@ -528,7 +528,7 @@ public class BillingService extends Service implements ServiceConnection {
 			e.printStackTrace();
 		}
         
-        Log.e(TAG, jsonObject.toString());
+        Log.i(TAG, jsonObject.toString());
         if (Extension.context != null)
         {
             Extension.context.dispatchStatusEventAsync("PURCHASE_SUCCESSFUL", jsonObject.toString());

@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: /Users/titi/Projects/AirInAppPurchase/NativeAndroid/src/com/android/vending/billing/IMarketBillingService.aidl
+ * Original file: /Users/arno/Projects/Freshplanet/ANE-In-App-Purchase/NativeAndroid/src/com/android/vending/billing/IMarketBillingService.aidl
  */
 package com.android.vending.billing;
 public interface IMarketBillingService extends android.os.IInterface
