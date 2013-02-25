@@ -18,7 +18,7 @@
 
 package com.freshplanet.inapppurchase;
 
-import android.os.Handler;
+import android.content.Intent;
 import android.util.Log;
 
 import com.adobe.fre.FREContext;
@@ -32,10 +32,11 @@ public class MakePurchaseFunction implements FREFunction {
 
     private static final String TAG = "MakePurchase";
 	
+    
 	@Override
 	public FREObject call(FREContext arg0, FREObject[] arg1) {
 		
-		Log.d(TAG, "v2.6");
+		Log.d(TAG, "v3.0");
 		
 		String purchaseId = null;
 		try {
@@ -54,17 +55,30 @@ public class MakePurchaseFunction implements FREFunction {
 		}
 		Log.d(TAG, "purchase id : "+purchaseId);
 		
-		// start a service.
-		BillingService service = new BillingService();
-		service.setContext(arg0.getActivity());
 		
-		// register a cash purchase observer for ui.
-		ResponseHandler.register( new CashPurchaseObserver(new Handler()));
+		IabHelper mHIabHelper = ExtensionContext.mHelper;
+		if (mHIabHelper == null)
+		{
+			Log.e(TAG, "iabHelper is not init");
+			Extension.context.dispatchStatusEventAsync("PURCHASE_ERROR", "YES");
+			return null;
+		}
 		
+
 		if (purchaseId != null)
 		{
-			service.requestPurchase(purchaseId, null);
+			
+			Intent i = new Intent(arg0.getActivity().getApplicationContext(), BillingActivity.class);
+			i.putExtra("type", BillingActivity.MAKE_PURCHASE);
+			i.putExtra("purchaseId", purchaseId);
+			arg0.getActivity().startActivity(i);
+			
+		} else
+		{
+			Log.e(TAG, "purchaseId is null");
+			Extension.context.dispatchStatusEventAsync("PURCHASE_ERROR", "YES");
 		}
+
 		
 		return null;
 	}

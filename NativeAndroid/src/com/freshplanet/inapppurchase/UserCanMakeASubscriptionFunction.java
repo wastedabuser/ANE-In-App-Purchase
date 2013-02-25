@@ -18,7 +18,7 @@
 
 package com.freshplanet.inapppurchase;
 
-import android.os.Handler;
+import android.util.Log;
 
 import com.adobe.fre.FREContext;
 import com.adobe.fre.FREFunction;
@@ -26,16 +26,24 @@ import com.adobe.fre.FREObject;
 
 public class UserCanMakeASubscriptionFunction implements FREFunction {
 
+	private static String TAG = "UserSubscription";
+
 	@Override
 	public FREObject call(FREContext arg0, FREObject[] arg1) {
 		
-		BillingService service = new BillingService();
-		service.setContext(arg0.getActivity());
 		
-		// register a cash purchase observer for ui.
-		ResponseHandler.register( new CashPurchaseObserver(new Handler()));
+		IabHelper mHIabHelper = ExtensionContext.mHelper;
+		if (mHIabHelper == null)
+		{
+			Log.e(TAG, "iabHelper is not init");
+			arg0.dispatchStatusEventAsync("SUBSCRIPTION_DISABLED", "YES");
+		} else
+		{
+			arg0.dispatchStatusEventAsync("SUBSCRIPTION_ENABLED", "YES");
+		}
 
-		service.checkBillingSupported(BillingService.ITEM_TYPE_SUBSCRIPTION);
+		
+
 		return null;
 		
 	}

@@ -18,7 +18,7 @@
 
 package com.freshplanet.inapppurchase;
 
-import android.os.Handler;
+import android.util.Log;
 
 import com.adobe.fre.FREContext;
 import com.adobe.fre.FREFunction;
@@ -26,16 +26,21 @@ import com.adobe.fre.FREObject;
 
 public class UserCanMakeAPurchaseFunction implements FREFunction {
 
+	private static String TAG = "UserPurchase";
+	
 	@Override
 	public FREObject call(FREContext arg0, FREObject[] arg1) {
-		
-		BillingService service = new BillingService();
-		service.setContext(arg0.getActivity());
-		
-		// register a cash purchase observer for ui.
-		ResponseHandler.register( new CashPurchaseObserver(new Handler()));
 
-		service.checkBillingSupported();
+		IabHelper mHIabHelper = ExtensionContext.mHelper;
+		if (mHIabHelper == null)
+		{
+			Log.e(TAG, "iabHelper is not init");
+			arg0.dispatchStatusEventAsync("PURCHASE_DISABLED", "YES");
+		} else
+		{
+			arg0.dispatchStatusEventAsync("PURCHASE_ENABLED", "YES");
+		}
+		
 		return null;
 	}
 

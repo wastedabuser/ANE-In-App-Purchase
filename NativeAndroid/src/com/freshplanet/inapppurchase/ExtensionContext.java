@@ -31,6 +31,8 @@ public class ExtensionContext extends FREContext {
 
 	private static String TAG = "InAppExtensionContext";
 
+	public static IabHelper mHelper;
+	
 	public ExtensionContext() {
 		Log.d(TAG, "ExtensionContext.create");
 	}
@@ -55,6 +57,8 @@ public class ExtensionContext extends FREContext {
 		functionMap.put("userCanMakeASubscription", new UserCanMakeASubscriptionFunction());
 		functionMap.put("makeSubscription", new MakeSubscriptionFunction());
 		functionMap.put("restoreTransaction", new RestoreTransactionFunction());
+		functionMap.put("initLib", new InitFunction());
+		functionMap.put("stopLib", new StopFunction());
 		return functionMap;	
 	}
 

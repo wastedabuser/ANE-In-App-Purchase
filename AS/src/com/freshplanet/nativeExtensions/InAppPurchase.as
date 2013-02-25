@@ -59,11 +59,13 @@ package com.freshplanet.nativeExtensions
 		}
 		
 		
-		public function init():void
+		public function init(googlePlayKey:String, debug:Boolean = false):void
 		{
-			// dont do anything, just create the context.
-			// needed when user has transactions pending. Google keeps spamming until we confirm.
-			// so the extension has to be ready at launch.
+			if (Capabilities.manufacturer.indexOf('Android') > -1)
+			{
+				trace("[InAppPurchase] init library");
+				extCtx.call("initLib", googlePlayKey, debug);
+			}
 		}
 			
 		
@@ -92,12 +94,12 @@ package com.freshplanet.nativeExtensions
 		
 		
 		
-		public function getProductsInfo(productsId:Array):void
+		public function getProductsInfo(productsId:Array, subscriptionIds:Array):void
 		{
 			if (this.isInAppPurchaseSupported)
 			{
 				trace("[InAppPurchase] get Products Info");
-				extCtx.call("getProductsInfo", productsId);
+				extCtx.call("getProductsInfo", productsId, subscriptionIds);
 			} else
 			{
 				this.dispatchEvent( new InAppPurchaseEvent(InAppPurchaseEvent.PRODUCT_INFO_ERROR) );
@@ -153,6 +155,17 @@ package com.freshplanet.nativeExtensions
 		}
 
 		
+		public function stop():void
+		{
+			if (Capabilities.manufacturer.indexOf('Android') > -1)
+			{
+				trace("[InAppPurchase] stop library");
+				extCtx.call("stopLib");
+			}
+		}
+
+
+		
 		public function get isInAppPurchaseSupported():Boolean
 		{
 			var value:Boolean = Capabilities.manufacturer.indexOf('iOS') > -1 || Capabilities.manufacturer.indexOf('Android') > -1;
@@ -185,6 +198,12 @@ package com.freshplanet.nativeExtensions
 					break;
 				case "PRODUCT_INFO_ERROR":
 					e = new InAppPurchaseEvent(InAppPurchaseEvent.PRODUCT_INFO_ERROR);
+					break;
+				case "SUBSCRIPTION_ENABLED":
+					e = new InAppPurchaseEvent(InAppPurchaseEvent.SUBSCRIPTION_ENABLED);
+					break;
+				case "SUBSCRIPTION_DISABLED":
+					e = new InAppPurchaseEvent(InAppPurchaseEvent.SUBSCRIPTION_DISABLED);
 					break;
 				default:
 				

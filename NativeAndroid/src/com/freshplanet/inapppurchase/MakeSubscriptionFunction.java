@@ -18,7 +18,7 @@
 
 package com.freshplanet.inapppurchase;
 
-import android.os.Handler;
+import android.content.Intent;
 import android.util.Log;
 
 import com.adobe.fre.FREContext;
@@ -32,10 +32,28 @@ public class MakeSubscriptionFunction implements FREFunction {
 
     private static final String TAG = "MakeSubscription";
 
+    static final int RC_REQUEST = 10001;
+
+    
+    IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
+        public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
+            Log.d(TAG, "Subscription finished: " + result + ", subscription: " + purchase);
+            if (result.isFailure()) {
+                Log.e(TAG, "Error purchasing: " + result);
+            	Extension.context.dispatchStatusEventAsync("PURCHASE_ERROR", purchase.getOriginalJson());
+                return;
+            }
+
+            Extension.context.dispatchStatusEventAsync("PURCHASE_SUCCESSFUL", purchase.getOriginalJson());
+            Log.d(TAG, "Subscription successful.");
+        }
+    };
+
+    
 	@Override
 	public FREObject call(FREContext arg0, FREObject[] arg1) {
 		
-		Log.d(TAG, "v2.6");
+		Log.d(TAG, "v3.0");
 		
 		String purchaseId = null;
 		try {
@@ -54,16 +72,25 @@ public class MakeSubscriptionFunction implements FREFunction {
 		}
 		Log.d(TAG, "purchase id : "+purchaseId);
 		
-		// start a service.
-		BillingService service = new BillingService();
-		service.setContext(arg0.getActivity());
-		
-		// register a cash purchase observer for ui.
-		ResponseHandler.register( new CashPurchaseObserver(new Handler()));
+		IabHelper mHIabHelper = ExtensionContext.mHelper;
+		if (mHIabHelper == null)
+		{
+			Log.e(TAG, "iabHelper is not init");
+			Extension.context.dispatchStatusEventAsync("PURCHASE_ERROR", "YES");
+			return null;
+		}
 		
 		if (purchaseId != null)
 		{
-			service.requestPurchase(purchaseId, BillingService.ITEM_TYPE_SUBSCRIPTION, null);
+			Intent i = new Intent(arg0.getActivity().getApplicationContext(), BillingActivity.class);
+			i.putExtra("type", BillingActivity.MAKE_SUBSCRIPTION);
+			i.putExtra("purchaseId", purchaseId);
+			arg0.getActivity().startActivity(i);
+			
+		} else
+		{
+			Log.e(TAG, "purchaseId is null");
+			Extension.context.dispatchStatusEventAsync("PURCHASE_ERROR", "YES");
 		}
 		
 		return null;	

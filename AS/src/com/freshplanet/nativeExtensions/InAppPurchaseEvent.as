@@ -32,6 +32,13 @@ package com.freshplanet.nativeExtensions
 		// user cannot make a purchase
 		public static const PURCHASE_DISABLED:String = "purchaseDisabled";
 		
+		// user can make a subscription
+		public static const SUBSCRIPTION_ENABLED:String = "subsEnabled";
+		// user cannot make a subscription
+		public static const SUBSCRIPTION_DISABLED:String = "subsDisabled";
+
+		
+		
 		public static const PRODUCT_INFO_RECEIVED:String = "productInfoReceived";
 		public static const PRODUCT_INFO_ERROR:String = "productInfoError";
 
