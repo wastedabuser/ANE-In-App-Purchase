@@ -24,7 +24,10 @@ public class BillingActivity extends Activity {
             if (result.isFailure()) {
                 Log.e(TAG, "Error purchasing: " + result);
             	Extension.context.dispatchStatusEventAsync("PURCHASE_ERROR", "ERROR");
-                return;
+                
+            	finish();
+            	
+            	return;
             }
 
 
@@ -62,20 +65,34 @@ public class BillingActivity extends Activity {
 		} else if (mtype.equals(MAKE_PURCHASE)) {
 			Log.d(TAG, "starting "+mtype);
 			String purchaseId = values.getString("purchaseId");
-			mHIabHelper.launchPurchaseFlow(this, purchaseId, RC_REQUEST, 
-	                mPurchaseFinishedListener, null);
+			try
+			{
+				mHIabHelper.launchPurchaseFlow(this, purchaseId, RC_REQUEST, 
+		                mPurchaseFinishedListener, null);
+			} catch( IllegalStateException e)
+			{
+				finish();
+            	Extension.context.dispatchStatusEventAsync("PURCHASE_ERROR", "ERROR");
+				return;
+			}
 
 		} else if (mtype.equals(MAKE_SUBSCRIPTION)) {
 			Log.d(TAG, "starting "+mtype);
 			String purchaseId = values.getString("purchaseId");
-			mHIabHelper.launchSubscriptionPurchaseFlow(this, purchaseId, RC_REQUEST, 
+			try
+			{
+				mHIabHelper.launchSubscriptionPurchaseFlow(this, purchaseId, RC_REQUEST, 
 	                mPurchaseFinishedListener);
+			} catch( IllegalStateException e)
+			{
+				finish();
+            	Extension.context.dispatchStatusEventAsync("PURCHASE_ERROR", "ERROR");
+				return;
+			}
 
 		} else {
 			Log.e(TAG, "unsupported type: "+mtype);
 		}
-		
-		
 		Log.d(TAG, "creation done");
 	}
 	

@@ -180,7 +180,10 @@ package com.freshplanet.nativeExtensions
 			trace(event);
 			var e:InAppPurchaseEvent;
 			switch(event.code)
-			{
+			{				
+				case "PRODUCT_INFO_RECEIVED":
+					e = new InAppPurchaseEvent(InAppPurchaseEvent.PRODUCT_INFO_RECEIVED, event.level);
+					break;
 				case "PURCHASE_SUCCESSFUL":
 					e = new InAppPurchaseEvent(InAppPurchaseEvent.PURCHASE_SUCCESSFULL, event.level);
 					break;
@@ -192,9 +195,6 @@ package com.freshplanet.nativeExtensions
 					break;
 				case "PURCHASE_DISABLED":
 					e = new InAppPurchaseEvent(InAppPurchaseEvent.PURCHASE_DISABLED, event.level);
-					break;
-				case "PRODUCT_INFO_SUCCESS":
-					e = new InAppPurchaseEvent(InAppPurchaseEvent.PRODUCT_INFO_RECEIVED, event.level);
 					break;
 				case "PRODUCT_INFO_ERROR":
 					e = new InAppPurchaseEvent(InAppPurchaseEvent.PRODUCT_INFO_ERROR);

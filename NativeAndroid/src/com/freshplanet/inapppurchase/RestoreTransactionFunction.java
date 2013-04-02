@@ -27,6 +27,10 @@ public class RestoreTransactionFunction implements FREFunction {
             {
             	data = inventory.toString();
             }
+            
+            Log.d(TAG, data);
+
+            
             Extension.context.dispatchStatusEventAsync("PRODUCT_INFO_RECEIVED", data) ;
         }
     };

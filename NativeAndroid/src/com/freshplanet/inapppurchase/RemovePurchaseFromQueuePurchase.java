@@ -72,6 +72,22 @@ public class RemovePurchaseFromQueuePurchase implements FREFunction {
 		}
 		Log.d(TAG, "purchase id : "+purchaseStr);
 
+		String token = null;
+		try {
+			token = arg1[1].getAsString();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (FRETypeMismatchException e) {
+			e.printStackTrace();
+		} catch (FREInvalidObjectException e) {
+			e.printStackTrace();
+		} catch (FREWrongThreadException e) {
+			e.printStackTrace();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
 		
 		
 		IabHelper mHIabHelper = ExtensionContext.mHelper;
@@ -81,13 +97,8 @@ public class RemovePurchaseFromQueuePurchase implements FREFunction {
 			return null;
 		}
 		
-		Purchase p = null;
-		try {
-			p = new Purchase(IabHelper.ITEM_TYPE_INAPP, purchaseStr, null);
-			mHIabHelper.consumeAsync(p, mConsumeFinishedListener);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		Purchase p = new Purchase(purchaseStr, token);
+		mHIabHelper.consumeAsync(p, mConsumeFinishedListener);
 		
 		return null;
 		
