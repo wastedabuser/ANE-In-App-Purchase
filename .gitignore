@@ -2,6 +2,7 @@ temp
 build.config
 
 # Flash Builder
+AS/bin
 actionscript/bin
 .actionScriptProperties
 .flexProperties
@@ -12,6 +13,7 @@ actionscript/bin
 .project
 
 # Android
+NativeAndroid/bin
 android/bin
 android/gen
 android/res
