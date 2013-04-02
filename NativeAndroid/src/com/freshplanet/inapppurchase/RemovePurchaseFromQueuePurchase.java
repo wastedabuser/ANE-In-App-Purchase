@@ -19,6 +19,7 @@
 package com.freshplanet.inapppurchase;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.util.Log;
 
@@ -55,9 +56,9 @@ public class RemovePurchaseFromQueuePurchase implements FREFunction {
 		
 		Log.d(TAG, "starting confirming purchases");
 
-		String purchaseStr = null;
+		String receipt = null;
 		try {
-			purchaseStr = arg1[0].getAsString();
+			receipt= arg1[1].getAsString();
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 		} catch (FRETypeMismatchException e) {
@@ -70,25 +71,18 @@ public class RemovePurchaseFromQueuePurchase implements FREFunction {
 		{
 			e.printStackTrace();
 		}
-		Log.d(TAG, "purchase id : "+purchaseStr);
-
-		String token = null;
-		try {
-			token = arg1[1].getAsString();
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (FRETypeMismatchException e) {
-			e.printStackTrace();
-		} catch (FREInvalidObjectException e) {
-			e.printStackTrace();
-		} catch (FREWrongThreadException e) {
-			e.printStackTrace();
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		Log.d(TAG, "receipt : "+receipt);
 
 		
+		JSONObject data;
+		String jsonStr = null;
+		try {
+			data = new JSONObject(receipt);
+			jsonStr = data.getString("signedData");
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		
 		IabHelper mHIabHelper = ExtensionContext.mHelper;
 		if (mHIabHelper == null)
@@ -97,8 +91,12 @@ public class RemovePurchaseFromQueuePurchase implements FREFunction {
 			return null;
 		}
 		
-		Purchase p = new Purchase(purchaseStr, token);
-		mHIabHelper.consumeAsync(p, mConsumeFinishedListener);
+		try {
+			Purchase p = new Purchase(IabHelper.ITEM_TYPE_INAPP , jsonStr, null);
+			mHIabHelper.consumeAsync(p, mConsumeFinishedListener);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		
 		return null;
 		

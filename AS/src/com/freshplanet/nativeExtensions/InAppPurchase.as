@@ -205,8 +205,10 @@ package com.freshplanet.nativeExtensions
 				case "SUBSCRIPTION_DISABLED":
 					e = new InAppPurchaseEvent(InAppPurchaseEvent.SUBSCRIPTION_DISABLED);
 					break;
+				case "RESTORE_INFO_RECEIVED":
+					e = new InAppPurchaseEvent(InAppPurchaseEvent.RESTORE_INFO_RECEIVED, event.level);
+					break;
 				default:
-				
 			}
 			if (e)
 			{

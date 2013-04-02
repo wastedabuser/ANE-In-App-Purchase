@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -87,10 +88,16 @@ public class Inventory {
 
    @Override
    public String toString() { 
+	   JSONArray purchaseArray = new JSONArray();
 	   JSONObject purchaseObject = new JSONObject();
        for (Purchase p : mPurchaseMap.values()) {
     	   try {
-    		   purchaseObject.put(p.getSku(), p.getOriginalJson());
+    		   JSONObject purchaseInfoObject = new JSONObject();
+    		   purchaseInfoObject.put("signedData", p.getOriginalJson());
+    		   purchaseInfoObject.put("signature", p.getSignature());
+    		   purchaseObject.put("receipt", purchaseInfoObject);
+    		   purchaseObject.put("receiptType", "GooglePlay");
+    		   purchaseArray.put(purchaseObject);
     	   } catch (JSONException e) {
     		   e.printStackTrace();
     	   }
@@ -107,7 +114,7 @@ public class Inventory {
        
        JSONObject resultObject = new JSONObject();
        try {
-    	   resultObject.put("purchases", purchaseObject);
+    	   resultObject.put("purchases", purchaseArray);
            resultObject.put("details", detailsObject);
        } catch (JSONException e) {
     	   e.printStackTrace();

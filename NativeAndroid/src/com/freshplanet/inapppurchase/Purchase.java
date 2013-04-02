@@ -47,13 +47,6 @@ public class Purchase {
        mSignature = signature;
    }
    
-   public Purchase(String sku, String token)
-   {
-	   mItemType = IabHelper.ITEM_TYPE_INAPP;
-	   mSku = sku;
-	   mToken = token;
-   }
-   
 
    public String getItemType() { return mItemType; }
    public String getOrderId() { return mOrderId; }

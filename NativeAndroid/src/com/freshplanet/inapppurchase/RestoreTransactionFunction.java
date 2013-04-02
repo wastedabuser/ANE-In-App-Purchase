@@ -28,10 +28,9 @@ public class RestoreTransactionFunction implements FREFunction {
             	data = inventory.toString();
             }
             
+            Extension.context.dispatchStatusEventAsync("RESTORE_INFO_RECEIVED", data) ;
             Log.d(TAG, data);
 
-            
-            Extension.context.dispatchStatusEventAsync("PRODUCT_INFO_RECEIVED", data) ;
         }
     };
 
@@ -48,7 +47,7 @@ public class RestoreTransactionFunction implements FREFunction {
 			return null;
 		}
 		
-		mHIabHelper.queryInventoryAsync(mGotInventoryListener);
+		mHIabHelper.queryInventoryAsync(false, mGotInventoryListener);
 		
 		return null;
 	}

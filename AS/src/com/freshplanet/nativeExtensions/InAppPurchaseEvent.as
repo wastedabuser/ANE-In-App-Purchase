@@ -42,7 +42,7 @@ package com.freshplanet.nativeExtensions
 		public static const PRODUCT_INFO_RECEIVED:String = "productInfoReceived";
 		public static const PRODUCT_INFO_ERROR:String = "productInfoError";
 
-		
+		public static const RESTORE_INFO_RECEIVED:String = "restoreInfoReceived";
 		
 		// json encoded string (if any)
 		public var data:String;

@@ -24,21 +24,21 @@ public class BillingActivity extends Activity {
             if (result.isFailure()) {
                 Log.e(TAG, "Error purchasing: " + result);
             	Extension.context.dispatchStatusEventAsync("PURCHASE_ERROR", "ERROR");
-                
             	finish();
-            	
             	return;
             }
 
 
            JSONObject resultObject = new JSONObject();
            try {
-        	   resultObject.put("receipt", purchase.getOriginalJson());
+        	   JSONObject resultInfoObject = new JSONObject();
+        	   resultInfoObject.put("signedData", purchase.getOriginalJson());
+        	   resultInfoObject.put("signature", purchase.getSignature());
+        	   resultObject.put("receipt", resultInfoObject);
                resultObject.put("receiptType", "GooglePlay");
            } catch (JSONException e) {
         	   e.printStackTrace();
            }
-           
             
             Extension.context.dispatchStatusEventAsync("PURCHASE_SUCCESSFUL", resultObject.toString());
             Log.d(TAG, "Purchase successful.");
