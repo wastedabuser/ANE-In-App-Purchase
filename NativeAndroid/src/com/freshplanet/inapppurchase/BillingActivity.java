@@ -15,9 +15,11 @@ public class BillingActivity extends Activity {
 	public static String MAKE_PURCHASE = "MakePurchase";
 	public static String MAKE_SUBSCRIPTION = "MakeSubscription";
 	
-	
     static final int RC_REQUEST = 10001;
 
+    public static BillingActivity instance = null;
+    
+    
     IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
         public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
             Log.d(TAG, "Purchase finished: " + result + ", purchase: " + purchase);
@@ -25,6 +27,10 @@ public class BillingActivity extends Activity {
                 Log.e(TAG, "Error purchasing: " + result);
             	Extension.context.dispatchStatusEventAsync("PURCHASE_ERROR", "ERROR");
             	finish();
+            	if (BillingActivity.instance != null)
+            	{
+            		BillingActivity.instance.finish();
+            	}
             	return;
             }
 
@@ -42,6 +48,10 @@ public class BillingActivity extends Activity {
             
             Extension.context.dispatchStatusEventAsync("PURCHASE_SUCCESSFUL", resultObject.toString());
             Log.d(TAG, "Purchase successful.");
+        	if (BillingActivity.instance != null)
+        	{
+        		BillingActivity.instance.finish();
+        	}
         }
     };
 
@@ -94,6 +104,7 @@ public class BillingActivity extends Activity {
 			Log.e(TAG, "unsupported type: "+mtype);
 		}
 		Log.d(TAG, "creation done");
+		BillingActivity.instance = this;
 	}
 	
 	@Override
@@ -133,6 +144,7 @@ public class BillingActivity extends Activity {
     protected void onDestroy(){
 		Log.d(TAG, "destroy activity");
 		super.onDestroy();
+		BillingActivity.instance = null;
 	}
 	
 	
