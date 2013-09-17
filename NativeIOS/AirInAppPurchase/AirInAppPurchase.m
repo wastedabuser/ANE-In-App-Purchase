@@ -20,27 +20,42 @@
 
 FREContext AirInAppCtx = nil;
 
-void *AirInAppRefToSelf;
+//void *AirInAppRefToSelf;
 
 #define DEFINE_ANE_FUNCTION(fn) FREObject (fn)(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
 
 
 @implementation AirInAppPurchase
 
-- (id) init
+
+static AirInAppPurchase *sharedInstance = nil;
+
++ (AirInAppPurchase *)sharedInstance
 {
-    self = [super init];
-    if (self)
+    if (sharedInstance == nil)
     {
-        AirInAppRefToSelf = self;
+        sharedInstance = [[super alloc] init];
+        [sharedInstance registerObserver];
     }
-    return self;
+    
+    return sharedInstance;
 }
+
+//- (id) init
+//{
+//    self = [super init];
+//    if (self)
+//    {
+//        AirInAppRefToSelf = self;
+//    }
+//    return self;
+//}
 
 -(void)dealloc
 {
     [[SKPaymentQueue defaultQueue] removeTransactionObserver:self];
-    AirInAppRefToSelf = nil;
+//    AirInAppRefToSelf = nil;
+    sharedInstance = nil;
     [super dealloc];
 }
 
@@ -238,6 +253,13 @@ void *AirInAppRefToSelf;
 DEFINE_ANE_FUNCTION(makePurchase)
 {
     
+//    if ((AirInAppPurchase*)AirInAppRefToSelf == nil)
+//    {
+//        AirInAppRefToSelf = [[AirInAppPurchase alloc] init];
+//        [(AirInAppPurchase*)AirInAppRefToSelf registerObserver];
+//    }
+    
+    
     uint32_t stringLength;
     const uint8_t *string1;
     //FREDispatchStatusEventAsync(context, (uint8_t*) "DEBUG", (uint8_t*) [@"purchase: getting product id" UTF8String]);
@@ -259,7 +281,7 @@ DEFINE_ANE_FUNCTION(makePurchase)
     
  //   [[SKPaymentQueue defaultQueue] removeTransactionObserver:self];
     
-    
+    [AirInAppPurchase sharedInstance];
     [[SKPaymentQueue defaultQueue] addPayment:payment];
     
     return nil;
@@ -270,6 +292,13 @@ DEFINE_ANE_FUNCTION(makePurchase)
 DEFINE_ANE_FUNCTION(userCanMakeAPurchase)
 {
     
+//    if ((AirInAppPurchase*)AirInAppRefToSelf == nil)
+//    {
+//        AirInAppRefToSelf = [[AirInAppPurchase alloc] init];
+//        [(AirInAppPurchase*)AirInAppRefToSelf registerObserver];
+//    }
+
+    [AirInAppPurchase sharedInstance];
     BOOL canMakePayment = [SKPaymentQueue canMakePayments];
     
     if (canMakePayment)
@@ -288,7 +317,14 @@ DEFINE_ANE_FUNCTION(userCanMakeAPurchase)
 // make a SKProductsRequest. wait for a SKProductsResponse
 // arg : array of string (string = product identifier)
 DEFINE_ANE_FUNCTION(getProductsInfo)
-{        
+{
+//    if ((AirInAppPurchase*)AirInAppRefToSelf == nil)
+//    {
+//        AirInAppRefToSelf = [[AirInAppPurchase alloc] init];
+//        [(AirInAppPurchase*)AirInAppRefToSelf registerObserver];
+//    }
+    
+    
     FREObject arr = argv[0]; // array
     uint32_t arr_len; // array length
     
@@ -313,8 +349,8 @@ DEFINE_ANE_FUNCTION(getProductsInfo)
     
     SKProductsRequest* request = [[SKProductsRequest alloc] initWithProductIdentifiers:productsIdentifiers];
     
-    
-    [(AirInAppPurchase*)AirInAppRefToSelf sendRequest:request AndContext:context];
+    [[AirInAppPurchase sharedInstance] sendRequest:request AndContext:context];
+//    [(AirInAppPurchase*)AirInAppRefToSelf sendRequest:request AndContext:context];
     
     
     return nil;
@@ -323,6 +359,12 @@ DEFINE_ANE_FUNCTION(getProductsInfo)
 // remove purchase from queue.
 DEFINE_ANE_FUNCTION(removePurchaseFromQueue)
 {
+//    if ((AirInAppPurchase*)AirInAppRefToSelf == nil)
+//    {
+//        AirInAppRefToSelf = [[AirInAppPurchase alloc] init];
+//        [(AirInAppPurchase*)AirInAppRefToSelf registerObserver];
+//    }
+    
     uint32_t stringLength;
     const uint8_t *string1;
     if (FREGetObjectAsUTF8(argv[0], &stringLength, &string1) != FRE_OK)
@@ -405,12 +447,6 @@ void AirInAppContextInitializer(void* extData, const uint8_t* ctxType, FREContex
     *functionsToSet = func;
     
     AirInAppCtx = ctx;
-
-    if ((AirInAppPurchase*)AirInAppRefToSelf == nil)
-    {
-        AirInAppRefToSelf = [[AirInAppPurchase alloc] init];
-        [(AirInAppPurchase*)AirInAppRefToSelf registerObserver];
-    }
 
 }
 
