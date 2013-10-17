@@ -16,7 +16,7 @@
 //  
 //////////////////////////////////////////////////////////////////////////////////////
 
-package com.freshplanet.nativeExtensions
+package com.freshplanet.ane.AirInAppPurchase
 {
 	import flash.events.Event;
 	
@@ -34,6 +34,13 @@ package com.freshplanet.nativeExtensions
 		
 		public static const PRODUCT_INFO_RECEIVED:String = "productInfoReceived";
 		public static const PRODUCT_INFO_ERROR:String = "productInfoError";
+		
+		public static const RESTORE_INFO_RECEIVED:String = "restoreInfoReceived";
+		
+		// user can make a subscription
+		public static const SUBSCRIPTION_ENABLED:String = "subsEnabled";
+		// user cannot make a subscription
+		public static const SUBSCRIPTION_DISABLED:String = "subsDisabled";
 
 		
 		

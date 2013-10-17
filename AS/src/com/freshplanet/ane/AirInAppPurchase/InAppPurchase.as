@@ -16,7 +16,7 @@
 //  
 //////////////////////////////////////////////////////////////////////////////////////
 
-package com.freshplanet.nativeExtensions
+package com.freshplanet.ane.AirInAppPurchase
 {
 	import flash.events.EventDispatcher;
 	import flash.events.StatusEvent;
@@ -59,7 +59,7 @@ package com.freshplanet.nativeExtensions
 		}
 		
 		
-		public function init():void
+		public function init(...args):void
 		{
 			// dont do anything, just create the context.
 			// needed when user has transactions pending. Google keeps spamming until we confirm.
