@@ -27,7 +27,7 @@
 - (void) completeTransaction:(SKPaymentTransaction*)transaction;
 - (void) failedTransaction:(SKPaymentTransaction*)transaction;
 - (void) purchasingTransaction:(SKPaymentTransaction*)transaction;
-- (void) restoreTransaction:(SKPaymentTransaction*)transaction;
+- (void) restoreCompletedTransactions:(SKPaymentTransaction*)transaction;
 @end
 
 FREObject AirInAppPurchaseInit(FREContext context, void* functionData, uint32_t argc, FREObject argv[]);

@@ -159,17 +159,18 @@ package com.freshplanet.ane.AirInAppPurchase
 		}
 		
 		
-		public function restoreTransactions():void
+		public function restoreCompletedTransactions():void
 		{
 			if (Capabilities.manufacturer.indexOf('Android') > -1)
 			{
-				extCtx.call("restoreTransaction");
+				extCtx.call("restoreCompletedTransactions");
 			}
 			else if (Capabilities.manufacturer.indexOf("iOS") > -1)
 			{
-				var jsonPurchases:String = "[" + _iosPendingPurchases.join(",") + "]";
-				var jsonData:String = "{ \"purchases\": " + jsonPurchases + "}";
-				dispatchEvent(new InAppPurchaseEvent(InAppPurchaseEvent.RESTORE_INFO_RECEIVED, jsonData));
+				extCtx.call("restoreCompletedTransactions");
+				//				var jsonPurchases:String = "[" + _iosPendingPurchases.join(",") + "]";
+				//				var jsonData:String = "{ \"purchases\": " + jsonPurchases + "}";
+				//				dispatchEvent(new InAppPurchaseEvent(InAppPurchaseEvent.RESTORE_INFO_RECEIVED, jsonData));
 			}
 		}
 
@@ -230,8 +231,15 @@ package com.freshplanet.ane.AirInAppPurchase
 				case "RESTORE_INFO_RECEIVED":
 					e = new InAppPurchaseEvent(InAppPurchaseEvent.RESTORE_INFO_RECEIVED, event.level);
 					break;
-				default:
+				case "RESTORE_COMPLETED_TRANSACTIONS_FINISHED":
+					e = new InAppPurchaseEvent(InAppPurchaseEvent.RESTORE_COMPLETED_TRANSACTIONS_FINISHED, event.level);
+					break;
+				case "RESTORE_COMPLETED_TRANSACTIONS_FAILED":
+					e = new InAppPurchaseEvent(InAppPurchaseEvent.RESTORE_COMPLETED_TRANSACTIONS_FAILED, event.level);
+					break;
 				
+				default:
+					
 			}
 			if (e)
 			{

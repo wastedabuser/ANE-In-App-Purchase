@@ -54,7 +54,7 @@ public class ExtensionContext extends FREContext implements IabHelper.OnIabSetup
 		functionMap.put("initLib", new InitFunction());
 		functionMap.put("getProductsInfo", new GetProductsInfoFunction());
 		functionMap.put("makePurchase", new MakePurchaseFunction());
-		functionMap.put("restoreTransaction", new RestoreTransactionFunction());
+		functionMap.put("restoreCompletedTransactions", new RestoreTransactionFunction());
 		functionMap.put("removePurchaseFromQueue", new RemovePurchaseFromQueuePurchase());
 		functionMap.put("makeSubscription", new MakeSubscriptionFunction());
 		
