@@ -36,12 +36,13 @@ public class BillingActivity extends Activity implements IabHelper.OnIabPurchase
 		Bundle extras = getIntent().getExtras();
 		String type = extras.getString("type");
 		String purchaseId = extras.getString("purchaseId");
+		String developerPayload = extras.getString("developerPayload");
 
 		if (type.equals(MAKE_PURCHASE))
 		{
 			try
 			{
-				Extension.context.getIabHelper().launchPurchaseFlow(this, purchaseId, RC_REQUEST, this, null);
+				Extension.context.getIabHelper().launchPurchaseFlow(this, purchaseId, RC_REQUEST, this, developerPayload);
 			}
 			catch (IllegalStateException e)
 			{

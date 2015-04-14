@@ -23,14 +23,15 @@
     <versionNumber>2.0.0</versionNumber>
 
     <platforms>
-
+		<!--
         <platform name="iPhone-ARM">
                 <applicationDeployment>
                     <nativeLibrary>libAirInAppPurchase.a</nativeLibrary>
                     <initializer>AirInAppInitializer</initializer> 
                 </applicationDeployment>
         </platform>
-
+		-->
+		
         <platform name="Android-ARM"> 
             <applicationDeployment> 
                 <nativeLibrary>libAirInAppPurchase.jar</nativeLibrary> 

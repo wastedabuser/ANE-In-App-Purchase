@@ -68,12 +68,12 @@ package com.freshplanet.ane.AirInAppPurchase
 			}
 		}
 		
-		public function makePurchase(productId:String ):void
+		public function makePurchase(productId:String, googleDeveloperPayload:String = ""):void
 		{
 			if (this.isInAppPurchaseSupported)
 			{
-				trace("[InAppPurchase] purchasing", productId);
-				extCtx.call("makePurchase", productId);
+				trace("[InAppPurchase] purchasing " + productId + " " + googleDeveloperPayload);
+				extCtx.call("makePurchase", productId, googleDeveloperPayload);
 			} else
 			{
 				this.dispatchEvent(new InAppPurchaseEvent(InAppPurchaseEvent.PURCHASE_ERROR, "InAppPurchase not supported"));
@@ -187,7 +187,7 @@ package com.freshplanet.ane.AirInAppPurchase
 		public function get isInAppPurchaseSupported():Boolean
 		{
 			var value:Boolean = Capabilities.manufacturer.indexOf('iOS') > -1 || Capabilities.manufacturer.indexOf('Android') > -1;
-			trace(value ? '[InAppPurchase]  in app purchase is supported ' : '[InAppPurchase]  in app purchase is not supported ');
+			trace(value ? '[InAppPurchase] in app purchase is supported ' : '[InAppPurchase]  in app purchase is not supported ');
 			return value;
 		}
 		
@@ -199,6 +199,9 @@ package com.freshplanet.ane.AirInAppPurchase
 			var e:InAppPurchaseEvent;
 			switch(event.code)
 			{
+				case "SETUP_COMPLETED":
+					e = new InAppPurchaseEvent(InAppPurchaseEvent.SETUP_COMPLETED, event.level);
+					break;
 				case "PRODUCT_INFO_RECEIVED":
 					e = new InAppPurchaseEvent(InAppPurchaseEvent.PRODUCT_INFO_RECEIVED, event.level);
 					break;

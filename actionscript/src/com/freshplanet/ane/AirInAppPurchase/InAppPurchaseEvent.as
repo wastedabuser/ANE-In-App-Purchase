@@ -23,6 +23,8 @@ package com.freshplanet.ane.AirInAppPurchase
 	public class InAppPurchaseEvent extends Event
 	{
 		
+		public static const SETUP_COMPLETED:String = "setupCompleted";
+		
 		// init -> check if previously purchases not being processed by the app
 		public static const PURCHASE_SUCCESSFULL:String = "purchaseSuccesfull";
 		public static const PURCHASE_ERROR:String   	= "purchaseError";
