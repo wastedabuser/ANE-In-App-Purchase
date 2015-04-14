@@ -87,10 +87,12 @@ public class ExtensionContext extends FREContext implements IabHelper.OnIabSetup
     	if (result.isSuccess())
     	{
     		Extension.log("Initialized IAB Helper successfully");
+			dispatchStatusEventAsync("SETUP_COMPLETED", "SUCCESS");
         }
     	else
     	{
     		Extension.log("Failed to initialize IAB Helper: " + result.getMessage());
+			dispatchStatusEventAsync("SETUP_COMPLETED", "FAILIURE");
     	}
     }
 	
