@@ -36,6 +36,7 @@ public class Extension implements FREExtension
 
 	public void dispose()
 	{
+		context.dispose();
 		context = null;
 	}
 	

@@ -213,6 +213,7 @@ public class IabHelper {
            public void onServiceConnected(ComponentName name, IBinder service) {
                logDebug("Billing service connected.");
                mService = IInAppBillingService.Stub.asInterface(service);
+			   
                String packageName = mContext.getPackageName();
                try {
                    logDebug("Checking for in-app billing 3 support.");
@@ -257,12 +258,15 @@ public class IabHelper {
        };
        
        Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
+	   serviceIntent.setPackage("com.android.vending");
+	   
        if (!mContext.getPackageManager().queryIntentServices(serviceIntent, 0).isEmpty()) {
            // service available to handle that Intent
+		   logDebug("Binding service");
            mContext.bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
-       }
-       else {
+       } else {
            // no service available to handle that Intent
+		   logDebug("No service!");
            if (listener != null) {
                listener.onIabSetupFinished(
                        new IabResult(BILLING_RESPONSE_RESULT_BILLING_UNAVAILABLE,

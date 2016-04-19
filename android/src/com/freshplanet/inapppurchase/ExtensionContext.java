@@ -25,6 +25,7 @@ import com.adobe.fre.FREContext;
 import com.adobe.fre.FREFunction;
 import com.freshplanet.inapppurchase.functions.GetProductsInfoFunction;
 import com.freshplanet.inapppurchase.functions.InitFunction;
+import com.freshplanet.inapppurchase.functions.DisposeFunction;
 import com.freshplanet.inapppurchase.functions.MakePurchaseFunction;
 import com.freshplanet.inapppurchase.functions.MakeSubscriptionFunction;
 import com.freshplanet.inapppurchase.functions.RemovePurchaseFromQueuePurchase;
@@ -43,6 +44,7 @@ public class ExtensionContext extends FREContext implements IabHelper.OnIabSetup
 	@Override
 	public void dispose()
 	{
+		disposeIab();
 		Extension.context = null;
 	}
 
@@ -52,6 +54,7 @@ public class ExtensionContext extends FREContext implements IabHelper.OnIabSetup
 		Map<String, FREFunction> functionMap = new HashMap<String, FREFunction>();
 		
 		functionMap.put("initLib", new InitFunction());
+		functionMap.put("stopLib", new DisposeFunction());
 		functionMap.put("getProductsInfo", new GetProductsInfoFunction());
 		functionMap.put("makePurchase", new MakePurchaseFunction());
 		functionMap.put("restoreTransaction", new RestoreTransactionFunction());
@@ -80,6 +83,16 @@ public class ExtensionContext extends FREContext implements IabHelper.OnIabSetup
 		_iabHelper = new IabHelper(getActivity(), key);
 		_iabHelper.enableDebugLogging(debug);
 		_iabHelper.startSetup(this);
+	}
+	
+	public void disposeIab()
+	{
+		Extension.log("Disposing IAB");
+		
+		if (_iabHelper != null)
+		{
+			_iabHelper.dispose();
+		}
 	}
 	
 	public void onIabSetupFinished(IabResult result)
